@@ -31,9 +31,13 @@ class BaseModel:
             self.created_at = datetime.datetime.now()
 
         if ("updated_at" in kwargs.keys()):
-            self.created_at = datetime.datetime.strptime(kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            self.updated_at = datetime.datetime.strptime(kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
         else:
             self.updated_at = datetime.datetime.now()
+
+        for key, value in kwargs.items():
+            if (key != "id" and key != "created_at" and key != "updated_at" and key != "__class__"):
+                setattr(self, key, value)
 
     def __str__(self):
         """New str representation for the class
