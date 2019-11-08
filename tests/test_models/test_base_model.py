@@ -29,12 +29,28 @@ class TestBase(unittest.TestCase):
         self.assertIsInstance(model_1, BaseModel)
         self.assertIsInstance(model_2, BaseModel)
 
-    def test_Base_str_format(self):
-        """ Tests if the str method is printing the string correctly
-        """
+"""    def test_Base_str_format(self):
+        # Tests if the str method is printing the string correctly
         model_1 = BaseModel()
         stream_out = io.StringIO()
         sys.stdout = stream_out
         print(model_1)
         sys.stdout = sys.__stdout__
         self.assertEqual(stream_out.getvalue(), #here goes the mock because we dont know the exact output)
+"""
+    def test_base_id_is_str(self):
+        obj = BaseModel()
+        self.assertTrue(type(obj.id) is str)
+
+    def test_base_id_is_uuid(self):
+        obj = BaseModel()
+        id_str = obj.id
+        self.assertEqual(id_str, str(uuid.UUID(id_str)))
+
+    def test_base_created_at_is_datetime(self):
+        obj = BaseModel()
+        self.assertTrue(type(obj.created_at) is datetime.datetime)
+
+    def test_base_updated_at_is_datetime(self):
+        obj = BaseModel()
+        self.assertTrue(type(obj.updated_at) is datetime.datetime)
