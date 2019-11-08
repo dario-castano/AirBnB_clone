@@ -75,3 +75,15 @@ class TestBase(unittest.TestCase):
     def test_base_updated_at_is_datetime(self):
         obj = BaseModel()
         self.assertTrue(type(obj.updated_at) is datetime.datetime)
+
+    def test_base_save_updates_timestamp(self, faketime):
+        obj = BaseModel()
+        date1 = obj.updated_at
+        obj.save()
+        date2 = obj.updated_at
+        self.assertTrue(date2 > date1)
+
+    def test_base_to_dict_returns_dict(self):
+        obj = BaseModel()
+        dic = obj.to_dict()
+        self.assertTrue(type(dic) is dict)
