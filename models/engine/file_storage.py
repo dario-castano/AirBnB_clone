@@ -2,6 +2,7 @@
 """Module that contains class FileStorage that serializes
 instances to a JSON file and deserializes JSON file to instances"""
 import json
+import models.base_model
 
 class FileStorage:
     """ Serializes and deserializes instances to JSON format
@@ -17,14 +18,14 @@ class FileStorage:
     def new(self, obj):
         """ Sets in __object dictionary an instance <obj classname>.id
         """
-        FileStorage.__objects[type(obj).__name__ + str(obj.id)] = obj
+        FileStorage.__objects[str(type(obj).__name__) + "." + str(obj.id)] = obj
 
     def save(self):
         """ Serializes __objects to the file
         """
         serialized = {}
 
-        for keys, objs in FileStorage.__objects:
+        for keys, objs in FileStorage.__objects.items():
             dict_obj = objs.to_dict()
             serialized[keys] = dict_obj
 
@@ -38,8 +39,11 @@ class FileStorage:
         """
         try:
             with open(FileStorage.__file_path, encoding="UTF-8") as f:
-                objs_dict = f.read()
+                objs_dict_read = f.read()
+                new_dict_reloaded = json.loads(objs_dict_read)
         except:
             return
 
-        FileStorage.__objects = json.loads(objs_dict)
+        for keys, objs_dict in new_dict_reloaded.items():
+            obj = models.base_model.BaseModel(**objs_dict)
+            FileStorage.__objects[keys] = obj
