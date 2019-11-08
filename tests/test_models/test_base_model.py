@@ -12,12 +12,24 @@ from models.base_model import BaseModel
 class TestBase(unittest.TestCase):
     """ Unit tests for the Base model class for the project
     """
-    def test_pep8_conformance(self):
+    def test_base_pep8_conformance(self):
         """ The code is PEP8 conformant?
         """
         pep8style = pep8.StyleGuide(quiet=True)
         result = pep8style.check_files(['../../../models/base_model.py'])
         self.assertEqual(result.total_errors, 0)
+
+    def test_base_documented(self):
+        """ BaseModel has some documentation?
+        """
+        from models import base_model
+        doc = base_model.__doc__
+        self.assertTrue(len(doc) > 10)
+        doc = BaseModel.__doc__
+        self.assertTrue(len(doc) > 10)
+        methods = [k for k, v in BaseModel.__dict__.items() if 'function' in str(v)]
+        for m in methods:
+            self.assertTrue(len(m.__doc__) > 10)
 
     def test_base_performance(self):
         """ Tests if instances are working correctly
@@ -92,6 +104,8 @@ class TestBase(unittest.TestCase):
         date1 = obj.updated_at
         obj.save()
         date2 = obj.updated_at
+        self.assertIsInstance(date1, datetime.datetime)
+        self.assertIsInstance(date2, datetime.datetime)
         self.assertTrue(date2 > date1)
 
     def test_base_to_dict_returns_dict(self):
