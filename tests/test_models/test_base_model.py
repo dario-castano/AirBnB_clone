@@ -13,7 +13,8 @@ class TestBase(unittest.TestCase):
     """ Unit tests for the Base model class for the project
     """
     def test_pep8_conformance(self):
-        """Test that we conform to PEP8."""
+        """ The code is PEP8 conformant?
+        """
         pep8style = pep8.StyleGuide(quiet=True)
         result = pep8style.check_files(['../../../models/base_model.py'])
         self.assertEqual(result.total_errors, 0)
@@ -37,7 +38,7 @@ class TestBase(unittest.TestCase):
         self.assertIsInstance(model_2, BaseModel)
 
     def test_base_str_format(self):
-        """ Tests if the str method is printing the string correctly
+        """ __str__ method is printing the string correctly?
         """
         title = '[BaseModel]'
         uu_id = 'ccb68527-5744-4e5c-ae6d-d21a09ecf50d'
@@ -60,23 +61,33 @@ class TestBase(unittest.TestCase):
         self.assertEqual(stdout_data.getvalue(), target)
 
     def test_base_id_is_str(self):
+        """ BaseModel's id is a str?
+        """
         obj = BaseModel()
         self.assertTrue(type(obj.id) is str)
 
     def test_base_id_is_uuid(self):
+        """ BaseModel's id is an UUID?
+        """
         obj = BaseModel()
         id_str = obj.id
         self.assertEqual(id_str, str(uuid.UUID(id_str)))
 
     def test_base_created_at_is_datetime(self):
+        """ BaseModel's created_at is a datetime object?
+        """
         obj = BaseModel()
         self.assertTrue(type(obj.created_at) is datetime.datetime)
 
     def test_base_updated_at_is_datetime(self):
+        """ BaseModel's updated_at is a datetime object?
+        """
         obj = BaseModel()
         self.assertTrue(type(obj.updated_at) is datetime.datetime)
 
     def test_base_save_updates_timestamp(self):
+        """ BaseModel's save() is updating the timestamp?
+        """
         obj = BaseModel()
         date1 = obj.updated_at
         obj.save()
@@ -84,11 +95,15 @@ class TestBase(unittest.TestCase):
         self.assertTrue(date2 > date1)
 
     def test_base_to_dict_returns_dict(self):
+        """ BaseModel's to_dict() returns a dict?
+        """
         obj = BaseModel()
         dic = obj.to_dict()
         self.assertTrue(type(dic) is dict)
 
     def test_base_to_dict_prints_isoformat(self):
+        """ BaseModel's to_dict() are storing isoformats?
+        """
         obj = BaseModel()
         iso_regex = r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}$'
         dic = obj.to_dict()
