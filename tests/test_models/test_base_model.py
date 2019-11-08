@@ -76,7 +76,7 @@ class TestBase(unittest.TestCase):
         obj = BaseModel()
         self.assertTrue(type(obj.updated_at) is datetime.datetime)
 
-    def test_base_save_updates_timestamp(self, faketime):
+    def test_base_save_updates_timestamp(self):
         obj = BaseModel()
         date1 = obj.updated_at
         obj.save()
@@ -87,3 +87,10 @@ class TestBase(unittest.TestCase):
         obj = BaseModel()
         dic = obj.to_dict()
         self.assertTrue(type(dic) is dict)
+
+    def test_base_to_dict_prints_isoformat(self):
+        obj = BaseModel()
+        iso_regex = r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}$'
+        dic = obj.to_dict()
+        self.assertRegex(dic['created_at'], iso_regex)
+        self.assertRegex(dic['updated_at'], iso_regex)
