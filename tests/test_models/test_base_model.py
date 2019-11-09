@@ -1,6 +1,7 @@
 import unittest
 """ Test cases for the BaseModels class
 """
+import time
 import io
 import contextlib
 import datetime
@@ -100,10 +101,10 @@ class TestBase(unittest.TestCase):
     def test_base_save_updates_timestamp(self):
         """ BaseModel's save() is updating the timestamp?
         """
-        obj = BaseModel()
-        date1 = obj.updated_at
-        obj.save()
-        date2 = obj.updated_at
+        new_obj = BaseModel()
+        date1 = new_obj.updated_at
+        new_obj.save()
+        date2 = new_obj.updated_at
         self.assertIsInstance(date1, datetime.datetime)
         self.assertIsInstance(date2, datetime.datetime)
         self.assertTrue(date2 > date1)
@@ -123,3 +124,63 @@ class TestBase(unittest.TestCase):
         dic = obj.to_dict()
         self.assertRegex(dic['created_at'], iso_regex)
         self.assertRegex(dic['updated_at'], iso_regex)
+
+    def test_base_to_dict_return_attributes(self):
+        """ Checks if to_dict() method returns  all the
+        attributes required as keys
+        """
+        obj = BaseModel()
+        obj.name = "holberton"
+        dic = obj.to_dict()
+        self.assertTrue("id" in dic.keys())
+        self.assertTrue("updated_at" in dic.keys())
+        self.assertTrue("created_at" in dic.keys())
+        self.assertTrue("__class__" in dic.keys())
+        self.assertTrue("name" in dic.keys())
+        self.assertTrue(dic["__class__"] == "BaseModel")
+        self.assertTrue(dic["name"] == "holberton")
+
+    def test_base_args_ignored(self):
+        """Tests that args are ignored as arguments of BaseModel()
+        """
+        obj = BaseModel("string")
+        with self.assertRaises(AttributeError):
+            print(obj.string)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+
+        obj = BaseModel([])
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+
+        obj = BaseModel(None)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+
+    def test_base_kwargs_used_only(self):
+        """ Tests if instantiation is correct using kwargs
+        """
+        dic = {"id"='ccb68527-5744-4e5c-ae6d-d21a09ecf50d',
+               "created_at"='2000-01-01T00:00:00.000000',
+               "updated_at"='2000-01-01T00:00:00.000000',
+               "name"="holberton"}
+        obj = BaseModel(**dic)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+        self.assertTrue(type(obj.created_at) is datetime.datetime)
+        self.assertTrue(type(obj.updated_at) is datetime.datetime)
+        self.assertTrue(obj.name == "holberton")
+
+    def test_base_kwargs_used_only_edge_cases(self):
+        """ Tests posible edge cases using kwargs
+        """
+        dic = {"id"='ccb68527-5744-4e5c-ae6d-d21a09ecf50d',
+               "created_at"='Wrong format: 2000-01-01T',
+               "updated_at"='Wrong format :2000-01-01T',
+               "name"="holberton"}
+        obj = BaseModel(**dic)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+        self.assertTrue(type(obj.created_at) is datetime.datetime)
+        self.assertTrue(type(obj.updated_at) is datetime.datetime)
+        self.assertTrue(obj.name == "holberton")
