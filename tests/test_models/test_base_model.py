@@ -9,14 +9,22 @@ import datetime
 import pep8
 import uuid
 from models.base_model import BaseModel
+from models.engine.file_storage import FileStorage
 
 
 class TestBase(unittest.TestCase):
     """ Unit tests for the Base model class for the project
     """
+    def setUp(self):
+        """ This method is always run for every test before execution
+        """
+        FileStorage._FileStorage__file_path = 'testfile.json'
+
     def tearDown(self):
-        if os.path.isfile('file.json'):
-            os.remove('file.json')
+        """ Always run after execution of tests
+        """
+        if os.path.isfile('testfile.json'):
+            os.remove('testfile.json')
 
     def test_base_pep8_conformance(self):
         """ The code is PEP8 conformant?
@@ -78,6 +86,9 @@ class TestBase(unittest.TestCase):
         with contextlib.redirect_stdout(stdout_data):
             print(model_1)
         self.assertEqual(stdout_data.getvalue(), target)
+        """WARNING--------------------------------------
+        THIS TEST HAS AN ERROR WHEN PRINTING A DICTIONARY
+        ORDER IS RANDOM""" 
 
     def test_base_id_is_str(self):
         """ BaseModel's id is a str?
