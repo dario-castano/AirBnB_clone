@@ -19,20 +19,20 @@ class FileStorage:
     def new(self, obj):
         """ Sets in __object dictionary an instance <obj classname>.id
         """
-        self.__objects[str(type(obj).__name__) + "." + str(obj.id)] = obj
+        FileStorage.__objects[str(type(obj).__name__) + "." + str(obj.id)] = obj
 
     def save(self):
         """ Serializes __objects to the file
         """
         serialized = {}
 
-        for keys, objs in self.__objects.items():
+        for keys, objs in FileStorage.__objects.items():
             dict_obj = objs.to_dict()
             serialized[keys] = dict_obj
 
         json_dictionary = json.dumps(serialized)
 
-        with open(self.__file_path, encoding="UTF", mode="w") as f:
+        with open(FileStorage.__file_path, encoding="UTF", mode="w") as f:
             f.write(json_dictionary)
 
     def reload(self):
@@ -47,4 +47,4 @@ class FileStorage:
 
         for keys, objs_dict in new_dict_reloaded.items():
             obj = models.base_model.BaseModel(**objs_dict)
-            self.__objects[keys] = obj
+            FileStorage.__objects[keys] = obj
