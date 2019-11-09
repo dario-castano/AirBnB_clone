@@ -28,14 +28,14 @@ class BaseModel:
         else:
             self.id = str(uuid.uuid4())
 
-        if ("created_at" in kwargs.keys()):
+        if "created_at" in kwargs.keys():
             self.created_at = datetime.\
                               datetime.strptime(kwargs["created_at"],
                                                 "%Y-%m-%dT%H:%M:%S.%f")
         else:
             self.created_at = datetime.datetime.now()
 
-        if ("updated_at" in kwargs.keys()):
+        if "updated_at" in kwargs.keys():
             self.updated_at = datetime.\
                               datetime.strptime(kwargs["updated_at"],
                                                 "%Y-%m-%dT%H:%M:%S.%f")
