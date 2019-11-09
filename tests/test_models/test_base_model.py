@@ -1,7 +1,6 @@
 import unittest
 """ Test cases for the BaseModels class
 """
-import time
 import io
 import os
 import contextlib
@@ -70,25 +69,29 @@ class TestBase(unittest.TestCase):
         title = '[BaseModel]'
         uu_id = 'ccb68527-5744-4e5c-ae6d-d21a09ecf50d'
         fake_date = datetime.datetime(2000, 1, 1, 0, 0, 0, 0)
+        fake_date_str = 'datetime.datetime(2000, 1, 1, 0, 0)'
 
         model_1 = BaseModel()
         model_1.id = uu_id
         model_1.created_at = fake_date
         model_1.updated_at = fake_date
 
-        fake_dict = {'id': uu_id,
-                     'created_at': fake_date,
-                     'updated_at': fake_date}
-
-        target = "{} ({}) {}\n".format(title, uu_id, fake_dict)
-
         stdout_data = io.StringIO()
+
         with contextlib.redirect_stdout(stdout_data):
             print(model_1)
-        self.assertEqual(stdout_data.getvalue(), target)
-        """WARNING--------------------------------------
-        THIS TEST HAS AN ERROR WHEN PRINTING A DICTIONARY
-        BECAUSE THE ORDER IS RANDOM""" 
+
+        captured = stdout_data.getvalue().split(' ', 2)
+        ans_title = captured[0]
+        ans_uuid = captured[1]
+        ans_dict = captured[2]
+
+        self.assertEqual(title, ans_title)
+        self.assertEqual("({})".format(uu_id), ans_uuid)
+        self.assertIn('id', ans_dict)
+        self.assertIn('created_at', ans_dict)
+        self.assertIn('updated_at', ans_dict)
+        self.assertIn(fake_date_str, ans_dict)
 
     def test_base_id_is_str(self):
         """ BaseModel's id is a str?
