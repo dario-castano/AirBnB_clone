@@ -88,7 +88,7 @@ class TestBase(unittest.TestCase):
         self.assertEqual(stdout_data.getvalue(), target)
         """WARNING--------------------------------------
         THIS TEST HAS AN ERROR WHEN PRINTING A DICTIONARY
-        ORDER IS RANDOM""" 
+        BECAUSE THE ORDER IS RANDOM""" 
 
     def test_base_id_is_str(self):
         """ BaseModel's id is a str?
