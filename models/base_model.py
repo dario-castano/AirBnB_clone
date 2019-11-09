@@ -28,17 +28,23 @@ class BaseModel:
         else:
             self.id = str(uuid.uuid4())
 
-        if "created_at" in kwargs.keys():
-            self.created_at = datetime.\
-                              datetime.strptime(kwargs["created_at"],
-                                                "%Y-%m-%dT%H:%M:%S.%f")
+        if ("created_at" in kwargs.keys()):
+            try:
+                self.created_at = datetime.\
+                                  datetime.strptime(kwargs["created_at"],
+                                                    "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                self.created_at = datetime.datetime.now()
         else:
             self.created_at = datetime.datetime.now()
 
-        if "updated_at" in kwargs.keys():
-            self.updated_at = datetime.\
-                              datetime.strptime(kwargs["updated_at"],
-                                                "%Y-%m-%dT%H:%M:%S.%f")
+        if ("updated_at" in kwargs.keys()):
+            try:
+                self.updated_at = datetime.\
+                                  datetime.strptime(kwargs["updated_at"],
+                                                    "%Y-%m-%dT%H:%M:%S.%f")
+            except:
+                self.updated_at = datetime.datetime.now()
         else:
             self.updated_at = datetime.datetime.now()
 
@@ -57,9 +63,7 @@ class BaseModel:
         """ Updates the public instance attribute Updated at
         """
         self.updated_at = datetime.datetime.now()
-        print(type(self.updated_at))
         models.storage.save()
-        print(self.updated_at)
 
     def to_dict(self):
         """ Returns a dictionary containing all keys/values of __dict__ of the instance
