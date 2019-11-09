@@ -2,6 +2,7 @@ import unittest
 """ Test cases for the BaseModels class
 """
 import io
+import os
 import contextlib
 import datetime
 import pep8
@@ -12,11 +13,15 @@ from models.base_model import BaseModel
 class TestBase(unittest.TestCase):
     """ Unit tests for the Base model class for the project
     """
+    def tearDown(self):
+        if os.path.isfile('file.json'):
+            os.remove('file.json')
+
     def test_base_pep8_conformance(self):
         """ The code is PEP8 conformant?
         """
         pep8style = pep8.StyleGuide(quiet=True)
-        result = pep8style.check_files(['../../../models/base_model.py'])
+        result = pep8style.check_files(['models/base_model.py'])
         self.assertEqual(result.total_errors, 0)
 
     def test_base_documented(self):
