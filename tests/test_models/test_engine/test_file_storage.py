@@ -65,10 +65,12 @@ class TestFileStorage(unittest.TestCase):
                "updated_at": '2000-01-01T00:00:00.000000'}
         obj = BaseModel(**dic)
         storage = FileStorage()
+
         storage.new(obj)
         objects = storage.all()
         self.assertTrue(objects["BaseModel.ccb68527-5744-\
 4e5c-ae6d-d21a09ecf50d"] is obj)
+
         storage.save()
         self.assertTrue(os.path.isfile('test_storage_file.json'))
         with open("test_storage_file.json", encoding="UTF-8") as f:
