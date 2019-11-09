@@ -28,7 +28,8 @@ class TestBase(unittest.TestCase):
         self.assertTrue(len(doc) > 10)
         doc = BaseModel.__doc__
         self.assertTrue(len(doc) > 10)
-        methods = [k for k, v in BaseModel.__dict__.items() if 'function' in str(v)]
+        methods = [k for k, v in BaseModel.__dict__.
+                   items() if 'function' in str(v)]
         for m in methods:
             self.assertTrue(len(m.__doc__) > 10)
 
@@ -160,10 +161,30 @@ class TestBase(unittest.TestCase):
     def test_base_kwargs_used_only(self):
         """ Tests if instantiation is correct using kwargs
         """
-        dic = {"id"='ccb68527-5744-4e5c-ae6d-d21a09ecf50d',
-               "created_at"='2000-01-01T00:00:00.000000',
-               "updated_at"='2000-01-01T00:00:00.000000',
-               "name"="holberton"}
+        dic = {"id": 'ccb68527-5744-4e5c-ae6d-d21a09ecf50d',
+               "created_at": '2000-01-01T00:00:00.000000',
+               "updated_at": '2000-01-01T00:00:00.000000',
+               "name": "holberton"}
+        obj = BaseModel(**dic)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+        self.assertTrue('ccb68527-5744-4e5c-ae6d-d21a09ecf50d' == obj.id)
+        self.assertTrue(type(obj.created_at) is datetime.datetime)
+        self.assertTrue(obj.created_at == datetime.
+                        datetime(2000, 1, 1, 0, 0, 0, 0))
+        self.assertTrue(type(obj.updated_at) is datetime.datetime)
+        self.assertTrue(obj.updated_at == datetime.
+                        datetime(2000, 1, 1, 0, 0, 0, 0))
+        self.assertTrue(obj.name == "holberton")
+
+    def test_base_kwargs_used_only_edge_cases_and_format(self):
+        """ Tests posible edge cases using kwargs
+        In case of wrong format, a new instance is created
+        """
+        dic = {"id": 'Wrong format: 5744-4e5c-ae6d-d21a09ecf50d',
+               "created_at": 'Wrong format: 2000-01-01T',
+               "updated_at": 'Wrong format :2000-01-01T',
+               "name": "holberton"}
         obj = BaseModel(**dic)
         self.assertIsInstance(obj, BaseModel)
         self.assertTrue(uuid.UUID(obj.id))
@@ -171,16 +192,40 @@ class TestBase(unittest.TestCase):
         self.assertTrue(type(obj.updated_at) is datetime.datetime)
         self.assertTrue(obj.name == "holberton")
 
-    def test_base_kwargs_used_only_edge_cases(self):
-        """ Tests posible edge cases using kwargs
-        """
-        dic = {"id"='ccb68527-5744-4e5c-ae6d-d21a09ecf50d',
-               "created_at"='Wrong format: 2000-01-01T',
-               "updated_at"='Wrong format :2000-01-01T',
-               "name"="holberton"}
+        dic = {"name": "holberton"}
         obj = BaseModel(**dic)
         self.assertIsInstance(obj, BaseModel)
         self.assertTrue(uuid.UUID(obj.id))
         self.assertTrue(type(obj.created_at) is datetime.datetime)
         self.assertTrue(type(obj.updated_at) is datetime.datetime)
+        self.assertTrue(obj.name == "holberton")
+
+        dic = {}
+        obj = BaseModel(**dic)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+        self.assertTrue(type(obj.created_at) is datetime.datetime)
+        self.assertTrue(type(obj.updated_at) is datetime.datetime)
+
+    def test_base_args_and_kwargs(self):
+        """ Tests if the object is instantiated correctly
+        when using both args and kwargs
+        """
+        dic = {"id": 'ccb68527-5744-4e5c-ae6d-d21a09ecf50d',
+               "created_at": '2000-01-01T00:00:00.000000',
+               "updated_at": '2000-01-01T00:00:00.000000',
+               "name": "holberton"}
+        args = ["hello",
+                [],
+                {}]
+        obj = BaseModel(*args, **dic)
+        self.assertIsInstance(obj, BaseModel)
+        self.assertTrue(uuid.UUID(obj.id))
+        self.assertTrue('ccb68527-5744-4e5c-ae6d-d21a09ecf50d' == obj.id)
+        self.assertTrue(type(obj.created_at) is datetime.datetime)
+        self.assertTrue(obj.created_at == datetime.
+                        datetime(2000, 1, 1, 0, 0, 0, 0))
+        self.assertTrue(type(obj.updated_at) is datetime.datetime)
+        self.assertTrue(obj.updated_at == datetime.
+                        datetime(2000, 1, 1, 0, 0, 0, 0))
         self.assertTrue(obj.name == "holberton")
