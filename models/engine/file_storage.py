@@ -52,4 +52,14 @@ class FileStorage:
                 obj = models.base_model.BaseModel(**objs_dict)
             if "User" in keys:
                 obj = models.user.User(**objs_dict)
+            if "Place" in keys:
+                obj = models.place.Place(**objs_dict)
+            if "State" in keys:
+                obj = models.state.State(**objs_dict)
+            if "City" in keys:
+                obj = models.city.City(**objs_dict)
+            if "Amenity" in keys:
+                obj = models.user.Amenity(**objs_dict)
+            if "Review" in keys:
+                obj = models.review.Review(**objs_dict)
             FileStorage.__objects[keys] = obj
