@@ -3,6 +3,7 @@
 This is the entry point to the HBnB console
 """
 import cmd
+from cmd_parser import CMDParser
 
 
 class HBNBCommand(cmd.Cmd):
@@ -29,6 +30,11 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         pass
 
+    def parseline(self, line):
+        answer = CMDParser(line)
+        new_line = "{} {}".format(answer.classname, answer.params)
+        return answer.operation, new_line.strip(), line
+
     def do_EOF(self, argstr):
         """
         EOF - Exits if EOF is detected
@@ -49,7 +55,7 @@ class HBNBCommand(cmd.Cmd):
         if argstr is None or not argstr:
             print(HBNBCommand.__err['CLS_MISS'])
             return
-        arglist = self.parse(argstr)
+        arglist = self.reparse(argstr)
         class_name = arglist[0]
         if class_name in HBNBCommand.__avail_cls:
             mod_name = HBNBCommand.__avail_cls[class_name]
@@ -64,21 +70,21 @@ class HBNBCommand(cmd.Cmd):
         show - Prints the string representation of an instance
         based on the class name and id
         """
-        arglist = self.parse(argstr)
+        arglist = self.reparse(argstr)
 
     def do_destroy(self, argstr):
         """
         destroy - Deletes an instance based on the class name
         and id (save the change into the JSON file)
         """
-        arglist = self.parse(argstr)
+        arglist = self.reparse(argstr)
 
     def do_all(self, argstr):
         """
         all - Prints all string representation of all instances
         based or not on the class name
         """
-        arglist = self.parse(argstr)
+        arglist = self.reparse(argstr)
 
     def do_update(self, argstr):
         """
@@ -86,9 +92,15 @@ class HBNBCommand(cmd.Cmd):
         and id by adding or updating attribute
         (save the change into the JSON file)
         """
-        arglist = self.parse(argstr)
+        arglist = self.reparse(argstr)
 
-    def parse(self, line):
+    def do_count(self, argstr):
+        """
+        Count the total objects of a given class
+        """
+        pass
+
+    def reparse(self, line):
         """
         Parse string to a string tuple
         """
