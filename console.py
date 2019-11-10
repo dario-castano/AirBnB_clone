@@ -88,11 +88,11 @@ class HBNBCommand(cmd.Cmd):
         """
         arglist = self.parse(argstr)
 
-    def parse(self, string):
+    def parse(self, line):
         """
         Parse string to a string tuple
         """
-        return tuple(string.split())
+        return tuple(line.split())
 
     def is_valid_class(self, str_cls):
         """
