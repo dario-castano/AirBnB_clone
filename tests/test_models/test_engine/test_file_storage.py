@@ -84,3 +84,29 @@ d21a09ecf50d\":' in read_json)
                             in read_json)
             self.assertTrue('\"updated_at\": \"2000-01-01T00:00:00\"'
                             in read_json)
+
+    def test_file_storage_empty_path(self):
+        """ Checks that reload() method does nothing when path is empty
+        """
+        if os.path.isfile('test_storage_file.json'):
+            os.remove('test_storage_file.json')
+        
+        storage = FileStorage()
+        storage.reload()
+        obj = storage.all()
+        self.assertTrue(obj == {})
+
+    def test_file_storage_reload(self):
+        """ Tests if the reload method is working correctly
+        """
+        with open("test_storage_file.json", encoding="UTF-8", mode="w") as f:
+            f.write('{"BaseModel.ccb68527-5744-4e5c-ae6d-d21a09ecf50d": {"\
+updated_at": "2000-01-01T00:00:00", "id": "ccb68527-5744-4e5c-\
+ae6d-d21a09ecf50d", "__class__": "BaseModel", "created_at": "\
+2000-01-01T00:00:00"}}')
+
+        storage = FileStorage()
+        storage.reload()
+        objs = storage.all()
+        self.assertTrue(type(objs["BaseModel.ccb68527-\
+5744-4e5c-ae6d-d21a09ecf50d"]) is BaseModel)
