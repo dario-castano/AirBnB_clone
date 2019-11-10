@@ -57,7 +57,7 @@ class HBNBCommand(cmd.Cmd):
             return
         arglist = self.reparse(argstr)
         class_name = arglist[0]
-        if class_name in HBNBCommand.__avail_cls:
+        if self.is_valid_class(class_name):
             mod_name = HBNBCommand.__avail_cls[class_name]
             instance = self.spawn('models', mod_name, class_name)
             instance.save()
