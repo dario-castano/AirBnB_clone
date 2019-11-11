@@ -155,7 +155,16 @@ class HBNBCommand(cmd.Cmd):
         """
         Count the total objects of a given class
         """
-        pass
+        if argstr is None or not argstr:
+            return
+
+        arglist = self.reparse(argstr)
+        class_name = arglist[0]
+        obj_count = 0
+        for keys in storage._FileStorage__objects.keys():
+            if class_name in keys:
+                obj_count += 1
+        print(obj_count)
 
     def reparse(self, line):
         """
