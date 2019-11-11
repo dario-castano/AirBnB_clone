@@ -106,7 +106,24 @@ class HBNBCommand(cmd.Cmd):
         all - Prints all string representation of all instances
         based or not on the class name
         """
+        if argstr is None or not argstr:
+            obj_list = []
+            for key in storage._FileStorage__objects:
+                obj_list.append(str(storage._FileStorage__objects[key]))
+            print(obj_list)
+            return
+
         arglist = self.reparse(argstr)
+        class_name = arglist[0]
+
+        if self.is_valid_class(class_name):
+            obj_list = []
+            for key in storage._FileStorage__objects:
+                if class_name in key:
+                    obj_list.append(str(storage._FileStorage__objects[key]))
+            print(obj_list)
+        else:
+            print(HBNBCommand.__err['CLS_NOEX'])
 
     def do_update(self, argstr):
         """
