@@ -4,6 +4,11 @@ instances to a JSON file and deserializes JSON file to instances"""
 import json
 import models.base_model
 import models.user
+import models.city
+import models.amenity
+import models.place
+import models.review
+import models.state
 
 
 class FileStorage:
