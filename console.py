@@ -197,8 +197,7 @@ class HBNBCommand(cmd.Cmd):
 
         checks = (argdict is None,
                   not argdict,
-                  'classname' not in argdict.keys(),
-                  not argdict['classname'])
+                  'classname' not in argdict.keys())
         if any(checks):
             print(HBNBCommand.__err['CLS_MISS'])
             return
