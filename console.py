@@ -4,6 +4,7 @@ This is the entry point to the HBnB console
 """
 import cmd
 from cmd_parser import CMDParser
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -70,7 +71,28 @@ class HBNBCommand(cmd.Cmd):
         show - Prints the string representation of an instance
         based on the class name and id
         """
+        if argstr is None or not argstr:
+            print(HBNBCommand.__err['CLS_MISS'])
+            return
+
         arglist = self.reparse(argstr)
+        class_name = arglist[0]
+
+        if self.is_valid_class(class_name) is False:
+            print(HBNBCommand.__err['CLS_NOEX'])
+            return
+
+        if len(arglist) < 2:
+            print(HBNBCommand.__err['ID_MISS'])
+            return
+
+        obj_id = arglist[1]
+        key_name = class_name + "." + obj_id
+
+        if key_name in storage._FileStorage__objects:
+            print(storage._FileStorage__objects[key_name])
+        else:
+            print(HBNBCommand.__err['ID_NOEX'])
 
     def do_destroy(self, argstr):
         """
@@ -127,4 +149,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
-
