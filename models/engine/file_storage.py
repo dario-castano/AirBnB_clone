@@ -59,7 +59,7 @@ class FileStorage:
             if "City" in keys:
                 obj = models.city.City(**objs_dict)
             if "Amenity" in keys:
-                obj = models.user.Amenity(**objs_dict)
+                obj = models.amenity.Amenity(**objs_dict)
             if "Review" in keys:
                 obj = models.review.Review(**objs_dict)
             FileStorage.__objects[keys] = obj
