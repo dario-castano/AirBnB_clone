@@ -99,7 +99,25 @@ class HBNBCommand(cmd.Cmd):
         destroy - Deletes an instance based on the class name
         and id (save the change into the JSON file)
         """
+        if argstr is None or not argstr:
+            print(HBNBCommand.__err['CLS_MISS'])
+            return
+
         arglist = self.reparse(argstr)
+        class_name = arglist[0]
+
+        if self.is_valid_class(class_name) is False:
+            print(HBNBCommand.__err['CLS_NOEX'])
+            return
+
+        obj_id = arglist[1]
+        key_name = class_name + "." + obj_id
+
+        if key_name in storage._FileStorage__objects:
+            del storage._FileStorage__objects[key_name]
+            storage.save()
+        else:
+            print(HBNBCommand.__err['ID_NOEX'])
 
     def do_all(self, argstr):
         """
