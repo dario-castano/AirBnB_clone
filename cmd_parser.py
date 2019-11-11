@@ -5,7 +5,7 @@ class CMDParser:
     """
     Parser class for AirBnB console
     """
-    __composite_regex = re.compile(r"^(\w+).(\w+)\((.+)\)$")
+    __composite_regex = re.compile(r"^(\w+).(\w+)\((.+)|\B\)$")
     __simple_regex = re.compile(r"^(\w+) (.+)$")
 
     def __init__(self, line):

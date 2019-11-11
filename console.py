@@ -3,6 +3,7 @@
 This is the entry point to the HBnB console
 """
 import cmd
+import json
 from cmd_parser import CMDParser
 from models import storage
 
@@ -33,31 +34,51 @@ class HBNBCommand(cmd.Cmd):
 
     def parseline(self, line):
         answer = CMDParser(line)
-        new_line = "{} {}".format(answer.classname, answer.params)
-        return answer.operation, new_line.strip(), line
 
-    def do_EOF(self, argstr):
+        new_line = '{'
+        if answer.classname:
+            new_line += '"classname": "{}"'.format(answer.classname)
+        if answer.uuid:
+            new_line += ', "id": "{}"'.format(answer.uuid)
+        if answer.params:
+            new_line += ', ' + answer.params
+        new_line += '}'
+
+        if new_line == '{}':
+            return answer.operation, '', line
+        elif answer.operation == 'help':
+            return answer.operation, answer.classname, line
+        else:
+            return answer.operation, new_line, line
+
+    def do_EOF(self, jsargs):
         """
         EOF - Exits if EOF is detected
         """
         return True
 
-    def do_quit(self, argstr):
+    def do_quit(self, jsargs):
         """
         quit - Exits the console
         """
         return True
 
-    def do_create(self, argstr):
+    def do_create(self, jsargs):
         """
         create - Creates a new instance of BaseModel,
         saves it (to the JSON file) and prints the id
         """
-        if argstr is None or not argstr:
+        argdict = self.reparse(jsargs)
+
+        checks = (argdict is None,
+                  not argdict,
+                  'classname' not in argdict.keys())
+        if any(checks):
             print(HBNBCommand.__err['CLS_MISS'])
             return
-        arglist = self.reparse(argstr)
-        class_name = arglist[0]
+
+        class_name = argdict['classname']
+
         if self.is_valid_class(class_name):
             mod_name = HBNBCommand.__avail_cls[class_name]
             instance = self.spawn('models', mod_name, class_name)
@@ -66,27 +87,32 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(HBNBCommand.__err['CLS_NOEX'])
 
-    def do_show(self, argstr):
+    def do_show(self, jsargs):
         """
         show - Prints the string representation of an instance
         based on the class name and id
         """
-        if argstr is None or not argstr:
+        argdict = self.reparse(jsargs)
+
+        checks = (argdict is None,
+                  not argdict,
+                  'classname' not in argdict.keys(),
+                  not argdict['classname'])
+        if any(checks):
             print(HBNBCommand.__err['CLS_MISS'])
             return
 
-        arglist = self.reparse(argstr)
-        class_name = arglist[0]
+        class_name = argdict['classname']
 
         if self.is_valid_class(class_name) is False:
             print(HBNBCommand.__err['CLS_NOEX'])
             return
 
-        if len(arglist) < 2:
+        if 'id' not in argdict.keys():
             print(HBNBCommand.__err['ID_MISS'])
             return
 
-        obj_id = arglist[1]
+        obj_id = argdict['id']
         key_name = class_name + "." + obj_id
 
         if key_name in storage._FileStorage__objects:
@@ -94,23 +120,31 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(HBNBCommand.__err['ID_NOEX'])
 
-    def do_destroy(self, argstr):
+    def do_destroy(self, jsargs):
         """
         destroy - Deletes an instance based on the class name
         and id (save the change into the JSON file)
         """
-        if argstr is None or not argstr:
+        argdict = self.reparse(jsargs)
+
+        checks = (argdict is None,
+                  not argdict,
+                  'classname' not in argdict.keys())
+        if any(checks):
             print(HBNBCommand.__err['CLS_MISS'])
             return
 
-        arglist = self.reparse(argstr)
-        class_name = arglist[0]
+        class_name = argdict['classname']
 
         if self.is_valid_class(class_name) is False:
             print(HBNBCommand.__err['CLS_NOEX'])
             return
 
-        obj_id = arglist[1]
+        if 'id' not in argdict.keys():
+            print(HBNBCommand.__err['ID_MISS'])
+            return
+
+        obj_id = argdict['id']
         key_name = class_name + "." + obj_id
 
         if key_name in storage._FileStorage__objects:
@@ -119,20 +153,24 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(HBNBCommand.__err['ID_NOEX'])
 
-    def do_all(self, argstr):
+    def do_all(self, jsargs):
         """
         all - Prints all string representation of all instances
         based or not on the class name
         """
-        if argstr is None or not argstr:
+        argdict = self.reparse(jsargs)
+
+        checks = (argdict is None,
+                  not argdict,
+                  'classname' not in argdict.keys())
+        if any(checks):
             obj_list = []
             for key in storage._FileStorage__objects:
                 obj_list.append(str(storage._FileStorage__objects[key]))
             print(obj_list)
             return
 
-        arglist = self.reparse(argstr)
-        class_name = arglist[0]
+        class_name = argdict['classname']
 
         if self.is_valid_class(class_name):
             obj_list = []
@@ -151,26 +189,39 @@ class HBNBCommand(cmd.Cmd):
         """
         arglist = self.reparse(argstr)
 
-    def do_count(self, argstr):
+    def do_count(self, jsargs):
         """
         Count the total objects of a given class
         """
-        if argstr is None or not argstr:
+        argdict = self.reparse(jsargs)
+
+        checks = (argdict is None,
+                  not argdict,
+                  'classname' not in argdict.keys(),
+                  not argdict['classname'])
+        if any(checks):
+            print(HBNBCommand.__err['CLS_MISS'])
             return
 
-        arglist = self.reparse(argstr)
-        class_name = arglist[0]
-        obj_count = 0
-        for keys in storage._FileStorage__objects.keys():
-            if class_name in keys:
-                obj_count += 1
-        print(obj_count)
+        class_name = argdict['classname']
+
+        if self.is_valid_class(class_name):
+            obj_count = 0
+            for keys in storage._FileStorage__objects.keys():
+                if class_name in keys:
+                    obj_count += 1
+            print(obj_count)
+        else:
+            print(HBNBCommand.__err['CLS_NOEX'])
 
     def reparse(self, line):
         """
-        Parse string to a string tuple
+        Parse JSON - string to a string dictionary
         """
-        return tuple(line.split())
+        if line:
+            return json.loads(line)
+        else:
+            return dict()
 
     def is_valid_class(self, str_cls):
         """
