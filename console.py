@@ -30,13 +30,22 @@ class HBNBCommand(cmd.Cmd):
              'NO_VAL': "** value missing **"}
 
     def __init__(self):
+        """
+        Constructor
+        """
         super().__init__()
         self.prompt = '(hbnb) '
 
     def emptyline(self):
+        """
+        Emptyline skips
+        """
         pass
 
     def parseline(self, line):
+        """
+        Overrides parseline to return JSON-strings
+        """
         answer = CMDParser(line)
 
         new_line = '{'
@@ -224,20 +233,15 @@ class HBNBCommand(cmd.Cmd):
             print(HBNBCommand.__err[argdict[HBNBCommand.__pc_id]])
             return
 
-        storage._FileStorage__objects.pop(key_name)
-        storage.save()
-        storage.reload()
-        mod_name = HBNBCommand.__avail_cls[class_name]
-        instance = self.spawn('models', mod_name, class_name)
-        temp_key = "{}.{}".format(class_name, instance.id)
-        storage._FileStorage__objects.pop(temp_key)
+        obj_to_replace = storage._FileStorage__objects[key_name]
+
         for k, v in argdict.items():
             if k == 'classname':
                 pass
             else:
-                setattr(instance, k, v)
-        storage.new(instance)
-        instance.save()
+                setattr(obj_to_replace, k, v)
+
+        obj_to_replace.save()
 
     def do_count(self, jsargs):
         """

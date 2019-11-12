@@ -69,14 +69,13 @@ class CMDParser:
                 self.uuid = self.uuid.replace('\"', '')
 
             if len(par_list) >= 3:
-                skell = par_list[2]\
-                    .replace('\"', '')\
-                    .replace("\'", '')\
-                    .split(' ', 1)
+                trans_table = {34: None, 39: None}
+                skell = re.split(r"(\w+|\"[\w ]+\")", par_list[2])
+                skell = [skell[k] for k in range(len(skell))
+                         if (skell[k] and skell[k] != ' ')]
+                skell = [elem.translate(trans_table) for elem in skell]
                 if len(skell) >= 2:
-                    self.params = '\"{}\": \"{}\"'.format(*skell)
+                    self.params = '\"{}\": \"{}\"'.format(skell[0], skell[1])
                 else:
                     err_k = hex(uuid.getnode())
                     self.params = '\"{}\": \"{}\"'.format(err_k, 'NO_VAL')
-
-
