@@ -41,6 +41,8 @@ class CMDParser:
             if len(par_list) >= 1:
                 self.uuid = par_list[0]
                 self.uuid = self.uuid.replace('\"', '')
+                if len(par_list) == 1:
+                    self.uuid = self.uuid.replace(')', '')
             if len(par_list) >= 2:
                 word = par_list[1].strip().replace(')', '')
                 dict_regex = re.compile(r"^\{.+\}$")
