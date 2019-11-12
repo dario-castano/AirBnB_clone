@@ -5,6 +5,7 @@ Module that helps to parse lines for the console
 import re
 import uuid
 
+
 class CMDParser:
     """
     Parser class for AirBnB console
