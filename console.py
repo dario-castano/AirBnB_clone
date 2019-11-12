@@ -13,6 +13,7 @@ class HBNBCommand(cmd.Cmd):
     """
     AirBnB console main class
     """
+    prompt = '(hbnb) '
     __pc_id = hex(uuid.getnode())
     __avail_cls = {'BaseModel': 'base_model',
                    'Amenity': 'amenity',
@@ -28,13 +29,6 @@ class HBNBCommand(cmd.Cmd):
              'ID_NOEX': "** no instance found **",
              'NO_ATTR': "** attribute name missing **",
              'NO_VAL': "** value missing **"}
-
-    def __init__(self):
-        """
-        Constructor
-        """
-        super().__init__()
-        self.prompt = '(hbnb) '
 
     def emptyline(self):
         """
