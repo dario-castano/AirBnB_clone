@@ -9,7 +9,7 @@ import pep8
 class TestUser(unittest.TestCase):
     """Tests class User
     """
-    def test_base_pep8_conformance(self):
+    def test_user_pep8_conformance(self):
         """ The code is PEP8 conformant?
         """
         pep8style = pep8.StyleGuide(quiet=True)

@@ -90,7 +90,7 @@ d21a09ecf50d\":' in read_json)
         """
         if os.path.isfile('test_storage_file.json'):
             os.remove('test_storage_file.json')
-        
+
         storage = FileStorage()
         storage.reload()
         obj = storage.all()
