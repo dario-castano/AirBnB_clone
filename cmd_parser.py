@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+"""
+Module that helps to parse lines for the console
+"""
 import re
 import uuid
 
