@@ -23,7 +23,9 @@ class HBNBCommand(cmd.Cmd):
     __err = {'CLS_MISS': "** class name missing **",
              'CLS_NOEX': "** class doesn't exist **",
              'ID_MISS': "** instance id missing **",
-             'ID_NOEX': "** no instance found **"}
+             'ID_NOEX': "** no instance found **",
+             'NO_ATTR': "** attribute name missing **",
+             'NO_VAL': "** value missing **"}
 
     def __init__(self):
         super().__init__()
@@ -181,13 +183,53 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(HBNBCommand.__err['CLS_NOEX'])
 
-    def do_update(self, argstr):
+    def do_update(self, jsargs):
         """
         update - Updates an instance based on the class name
         and id by adding or updating attribute
         (save the change into the JSON file)
         """
-        arglist = self.reparse(argstr)
+        argdict = self.reparse(jsargs)
+
+        checks = (argdict is None,
+                  not argdict,
+                  'classname' not in argdict.keys())
+        if any(checks):
+            print(HBNBCommand.__err['CLS_MISS'])
+            return
+
+        class_name = argdict['classname']
+
+        if not self.is_valid_class(class_name):
+            print(HBNBCommand.__err['CLS_NOEX'])
+            return
+
+        if 'id' not in argdict.keys():
+            print(HBNBCommand.__err['ID_MISS'])
+            return
+
+        obj_id = argdict['id']
+        key_name = class_name + "." + obj_id
+
+        if key_name in storage._FileStorage__objects:
+            storage._FileStorage__objects.pop(key_name)
+            storage.save()
+            storage.reload()
+        else:
+            print(HBNBCommand.__err['ID_NOEX'])
+            return
+
+        mod_name = HBNBCommand.__avail_cls[class_name]
+        instance = self.spawn('models', mod_name, class_name)
+        temp_key = "{}.{}".format(class_name, instance.id)
+        storage._FileStorage__objects.pop(temp_key)
+        for k, v in argdict.items():
+            if k == 'classname':
+                pass
+            else:
+                setattr(instance, k, v)
+        storage.new(instance)
+        instance.save()
 
     def do_count(self, jsargs):
         """
