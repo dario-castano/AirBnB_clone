@@ -1,5 +1,5 @@
 import re
-
+import uuid
 
 class CMDParser:
     """
@@ -68,4 +68,10 @@ class CMDParser:
                     .replace('\"', '')\
                     .replace("\'", '')\
                     .split(' ', 1)
-                self.params = '\"{}\": \"{}\"'.format(*skell)
+                if len(skell) >= 2:
+                    self.params = '\"{}\": \"{}\"'.format(*skell)
+                else:
+                    err_k = hex(uuid.getnode())
+                    self.params = '\"{}\": \"{}\"'.format(err_k, 'NO_VAL')
+
+

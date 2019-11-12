@@ -4,6 +4,7 @@ This is the entry point to the HBnB console
 """
 import cmd
 import json
+import uuid
 from cmd_parser import CMDParser
 from models import storage
 
@@ -12,6 +13,7 @@ class HBNBCommand(cmd.Cmd):
     """
     AirBnB console main class
     """
+    __pc_id = hex(uuid.getnode())
     __avail_cls = {'BaseModel': 'base_model',
                    'Amenity': 'amenity',
                    'City': 'city',
@@ -211,14 +213,21 @@ class HBNBCommand(cmd.Cmd):
         obj_id = argdict['id']
         key_name = class_name + "." + obj_id
 
-        if key_name in storage._FileStorage__objects:
-            storage._FileStorage__objects.pop(key_name)
-            storage.save()
-            storage.reload()
-        else:
+        if key_name not in storage._FileStorage__objects:
             print(HBNBCommand.__err['ID_NOEX'])
             return
 
+        if len(argdict) <= 2:
+            print(HBNBCommand.__err['NO_ATTR'])
+            return
+
+        if HBNBCommand.__pc_id in argdict:
+            print(HBNBCommand.__err[argdict[HBNBCommand.__pc_id]])
+            return
+
+        storage._FileStorage__objects.pop(key_name)
+        storage.save()
+        storage.reload()
         mod_name = HBNBCommand.__avail_cls[class_name]
         instance = self.spawn('models', mod_name, class_name)
         temp_key = "{}.{}".format(class_name, instance.id)
