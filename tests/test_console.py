@@ -34,13 +34,24 @@ class TestConsole(unittest.TestCase):
         """
         Create should fail if no class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_MISS'] + '\n')
 
     def test_create_wrong_class(self):
         """
         Create should fail if the wrong class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("create YoMAMA")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("YoMAMA.create()")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
 
     def test_create_saves_json(self):
         """
@@ -64,7 +75,10 @@ class TestConsole(unittest.TestCase):
         """
         Show should fail if no class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("show")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_MISS'] + '\n')
 
     def test_show_missing_id(self):
         """
@@ -76,7 +90,15 @@ class TestConsole(unittest.TestCase):
         """
         Show should fail if the wrong class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("show YoMAMA")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("YoMAMA.show()")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
 
     def test_show_wrong_id(self):
         """
@@ -100,7 +122,10 @@ class TestConsole(unittest.TestCase):
         """
         destroy should fail if no class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_MISS'] + '\n')
 
     def test_destroy_missing_id(self):
         """
@@ -112,7 +137,15 @@ class TestConsole(unittest.TestCase):
         """
         destroy should fail if the wrong class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("destroy YoMAMA")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("YoMAMA.destroy()")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
 
     def test_destroy_wrong_id(self):
         """
@@ -132,27 +165,9 @@ class TestConsole(unittest.TestCase):
         """
         pass
 
-    def test_all_missing_class(self):
-        """
-        all should fail if no class are typed
-        """
-        pass
-
-    def test_all_missing_id(self):
-        """
-        all should fail if no id are typed
-        """
-        pass
-
     def test_all_wrong_class(self):
         """
         all should fail if the wrong class are typed
-        """
-        pass
-
-    def test_all_wrong_id(self):
-        """
-        all should fail if the wrong id are typed
         """
         pass
 
@@ -172,7 +187,10 @@ class TestConsole(unittest.TestCase):
         """
         update should fail if no class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_MISS'] + '\n')
 
     def test_update_missing_id(self):
         """
@@ -184,7 +202,15 @@ class TestConsole(unittest.TestCase):
         """
         update should fail if the wrong class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("update YoMAMA")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("YoMAMA.update()")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
 
     def test_update_wrong_id(self):
         """
