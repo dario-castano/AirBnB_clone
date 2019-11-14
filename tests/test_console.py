@@ -227,14 +227,12 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("create {}".format(cls_elem))
 
             with patch('sys.stdout', new=StringIO()) as f:
-                HBNBCommand().onecmd("destroy {} {}"
-                                     .format(cls_elem, fake_id))
+                HBNBCommand().onecmd("destroy {} {}".format(cls_elem, fake_id))
             outstr = f.getvalue()
             self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
             with patch('sys.stdout', new=StringIO()) as f:
-                HBNBCommand().onecmd("{}.destroy({})"
-                                     .format(cls_elem, fake_id))
+                HBNBCommand().onecmd("{}.destroy({})".format(cls_elem, fake_id))
             outstr = f.getvalue()
             self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
