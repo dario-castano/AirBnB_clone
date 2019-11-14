@@ -1,7 +1,5 @@
 import unittest
-import console
 import os
-import pep8
 import uuid
 from io import StringIO
 from unittest.mock import patch
@@ -35,27 +33,6 @@ class TestConsole(unittest.TestCase):
     def tearDown(self):
         if os.path.isfile(TestConsole.jsfile_test):
             os.remove(TestConsole.jsfile_test)
-
-    def test_console_pep8_conformance(self):
-        """The Console code is PEP8 conformant?
-        """
-        style = pep8.StyleGuide(quiet=True)
-        result = style.check_files(['console.py'])
-        self.assertEqual(result.total_errors, 0)
-
-    def test_console_test_pep8_conformance(self):
-        """ The Console Test code is PEP8 conformant?
-        """
-        pep8style = pep8.StyleGuide(quiet=True)
-        result = pep8style.check_files(
-            ['tests/test_console.py'])
-        self.assertEqual(result.total_errors, 0)
-
-    def test_console_documented(self):
-        """Console has some documentation?
-        """
-        self.assertTrue(len(console.__doc__) >= 1)
-        self.assertTrue(len(HBNBCommand.__doc__) >= 1)
 
     def test_help_works(self):
         """
@@ -121,7 +98,19 @@ class TestConsole(unittest.TestCase):
             self.assertTrue(key in FileStorage._FileStorage__objects.keys())
 
     def test_show_wrong_class(self):
-        pass
+        """
+        show used with wrong class
+        """
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("show YoMAMA")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("YoMAMA.show()")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+        
 
     def test_create_has_help(self):
         """
