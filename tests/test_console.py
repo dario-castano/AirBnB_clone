@@ -187,7 +187,11 @@ class TestConsole(unittest.TestCase):
         """
         Show has documented help
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help create")
+        outstr = f.getvalue()
+        self.assertIn("show - Prints the string representation of an instance",
+                      outstr)
 
     def test_destroy_missing_class(self):
         """
