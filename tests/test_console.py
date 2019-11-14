@@ -311,6 +311,7 @@ class TestConsole(unittest.TestCase):
         outstr = f.getvalue()
         self.assertIn("destroy - Deletes an instance based on the class name",
                       outstr)
+        self.assertIn("and id (save the change into the JSON file)", outstr)
 
     def test_all_wrong_class(self):
         """
