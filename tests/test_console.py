@@ -340,6 +340,7 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("help all")
         outstr = f.getvalue()
         self.assertIn("all - Prints all string representation of all instances", outstr)
+        self.assertIn("based or not on the class name", outstr)
 
     def test_update_missing_class(self):
         """
