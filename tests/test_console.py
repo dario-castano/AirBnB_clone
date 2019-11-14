@@ -313,7 +313,10 @@ class TestConsole(unittest.TestCase):
         """
         all has documented help
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help all")
+        outstr = f.getvalue()
+        self.assertIn("all - Prints all string representation of all instances", outstr)
 
     def test_update_missing_class(self):
         """
