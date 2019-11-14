@@ -412,4 +412,5 @@ class TestConsole(unittest.TestCase):
         outstr = f.getvalue()
         self.assertIn("update - Updates an instance based on the class name", outstr)
         self.assertIn("and id by adding or updating attribute", outstr)
+        self.assertIn("(save the change into the JSON file)", outstr)
 
