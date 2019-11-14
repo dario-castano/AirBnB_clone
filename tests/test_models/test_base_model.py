@@ -26,7 +26,7 @@ class TestBase(unittest.TestCase):
             os.remove('testfile.json')
 
     def test_base_pep8_conformance(self):
-        """ The code is PEP8 conformant?
+        """ The BaseModel code is PEP8 conformant?
         """
         pep8style = pep8.StyleGuide(quiet=True)
         result = pep8style.check_files(['models/base_model.py'])
