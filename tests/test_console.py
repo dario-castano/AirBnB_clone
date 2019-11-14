@@ -68,6 +68,7 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("create YoMAMA")
         outstr = f.getvalue()
+   
         self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
 
         with patch('sys.stdout', new=StringIO()) as f:
