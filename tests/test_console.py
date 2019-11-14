@@ -410,5 +410,6 @@ class TestConsole(unittest.TestCase):
         with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd("help update")
         outstr = f.getvalue()
-        self.assertIn("asl an instance based on the class name - Prints all string representation of all instances", outstr)
+        self.assertIn("update - Updates an instance based on the class name", outstr)
+        self.assertIn("and id by adding or updating attribute", outstr)
 
