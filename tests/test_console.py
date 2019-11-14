@@ -28,9 +28,13 @@ class TestConsole(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        """Set up for every test
+        """
         FileStorage._FileStorage__file_path = TestConsole.jsfile_test
 
     def tearDown(self):
+        """ tear down method for every test
+        """
         if os.path.isfile(TestConsole.jsfile_test):
             os.remove(TestConsole.jsfile_test)
 
