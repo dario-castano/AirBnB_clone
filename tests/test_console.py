@@ -75,12 +75,29 @@ class TestConsole(unittest.TestCase):
         """
         Create makes a JSON file if doesnt exists
         """
-        pass
+        if os.path.isfile(TestConsole.jsfile_test):
+            os.remove(TestConsole.jsfile_test)
+        HBNBCommand().onecmd("create BaseModel")
+        self.assertTrue(os.path.isfile(TestConsole.jsfile_test))
 
     def test_create_ok_params(self):
         """
         Create works with correct parameters
         """
+        for cls_elem in TestConsole.cls_list:
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create {}".format(cls_elem))
+            outstr = f.getvalue()
+            key = cls_elem + "." + outstr[:-1]
+            self.assertTrue(key in FileStorage._FileStorage__objects.keys())
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.create()".format(cls_elem))
+            outstr = f.getvalue()
+            key = cls_elem + "." + outstr[:-1]
+            self.assertTrue(key in FileStorage._FileStorage__objects.keys())
+
+    def test_show_wrong_class(self):
         pass
 
     def test_create_has_help(self):
