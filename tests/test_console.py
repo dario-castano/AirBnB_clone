@@ -181,14 +181,32 @@ class TestConsole(unittest.TestCase):
         """
         Show works with correct parameters
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("create {}".format(cls_elem))
+            outstr = f.getvalue()
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("show {} {}".format(cls_elem, outstr[:-1])
+                                     )
+            out_object = f.getvalue()
+            self.assertTrue(outstr[:-1] in out_object)
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.create()".format(cls_elem))
+            outstr = f.getvalue()
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.show(\"{}\")".format(cls_elem,
+                                     outstr[:-1])
+                                     )
+            out_object = f.getvalue()
+            self.assertTrue(outstr[:-1] in out_object)
 
     def test_show_has_help(self):
         """
         Show has documented help
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("help create")
+            HBNBCommand().onecmd("help show")
         outstr = f.getvalue()
         self.assertIn("show - Prints the string representation of an instance",
                       outstr)
