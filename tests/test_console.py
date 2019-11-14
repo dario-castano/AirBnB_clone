@@ -408,7 +408,7 @@ class TestConsole(unittest.TestCase):
         update has documented help
         """
         with patch('sys.stdout', new=StringIO()) as f:
-            HBNBCommand().onecmd("help all")
+            HBNBCommand().onecmd("help update")
         outstr = f.getvalue()
         self.assertIn("all - Prints all string representation of all instances", outstr)
 
