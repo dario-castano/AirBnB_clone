@@ -278,7 +278,11 @@ class TestConsole(unittest.TestCase):
         """
         destroy has documented help
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help destroy")
+        outstr = f.getvalue()
+        self.assertIn("destroy - Deletes an instance based on the class name",
+                      outstr)
 
     def test_all_wrong_class(self):
         """
