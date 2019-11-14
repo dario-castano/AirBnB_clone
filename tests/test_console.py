@@ -1,5 +1,6 @@
 import unittest
 import os
+import uuid
 from io import StringIO
 from unittest.mock import patch
 from console import HBNBCommand
@@ -28,6 +29,8 @@ class TestConsole(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         FileStorage._FileStorage__file_path = TestConsole.jsfile_test
+
+    def tearDown(self):
         if os.path.isfile(TestConsole.jsfile_test):
             os.remove(TestConsole.jsfile_test)
 
@@ -128,7 +131,19 @@ class TestConsole(unittest.TestCase):
         """
         Show should fail if the wrong id are typed
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            fake_id = uuid.uuid4()
+            HBNBCommand().onecmd("create {}".format(cls_elem))
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("show {} {}".format(cls_elem, fake_id))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.show({})".format(cls_elem, fake_id))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
     def test_show_ok_params(self):
         """
@@ -184,7 +199,19 @@ class TestConsole(unittest.TestCase):
         """
         destroy should fail if the wrong id are typed
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            fake_id = uuid.uuid4()
+            HBNBCommand().onecmd("create {}".format(cls_elem))
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("destroy {} {}".format(cls_elem, fake_id))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.destroy({})".format(cls_elem, fake_id))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
     def test_destroy_ok_params(self):
         """
@@ -266,7 +293,19 @@ class TestConsole(unittest.TestCase):
         """
         update should fail if the wrong id are typed
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            fake_id = uuid.uuid4()
+            HBNBCommand().onecmd("create {}".format(cls_elem))
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("update {} {}".format(cls_elem, fake_id))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.update({})".format(cls_elem, fake_id))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
     def test_update_ok_params(self):
         """
