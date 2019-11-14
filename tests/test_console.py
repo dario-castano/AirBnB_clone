@@ -1,20 +1,35 @@
 import unittest
-import re
+import os
 from io import StringIO
 from unittest.mock import patch
 from console import HBNBCommand
+from models.engine.file_storage import FileStorage
 
 
 class TestConsole(unittest.TestCase):
     """
     Test cases for the console
     """
+    jsfile_test = 'consoletest.json'
     err = {'CLS_MISS': "** class name missing **",
            'CLS_NOEX': "** class doesn't exist **",
            'ID_MISS': "** instance id missing **",
            'ID_NOEX': "** no instance found **",
            'NO_ATTR': "** attribute name missing **",
            'NO_VAL': "** value missing **"}
+    cls_list = ['BaseModel',
+                'Amenity',
+                'City',
+                'Place',
+                'Review',
+                'State',
+                'User']
+
+    @classmethod
+    def setUpClass(cls):
+        FileStorage._FileStorage__file_path = TestConsole.jsfile_test
+        if os.path.isfile(TestConsole.jsfile_test):
+            os.remove(TestConsole.jsfile_test)
 
     def test_help_works(self):
         """
@@ -84,7 +99,16 @@ class TestConsole(unittest.TestCase):
         """
         Show should fail if no id are typed
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("show {}".format(cls_elem))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_MISS'] + '\n')
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.show()".format(cls_elem))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_MISS'] + '\n')
 
     def test_show_wrong_class(self):
         """
@@ -131,7 +155,16 @@ class TestConsole(unittest.TestCase):
         """
         destroy should fail if no id are typed
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("destroy {}".format(cls_elem))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_MISS'] + '\n')
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.destroy()".format(cls_elem))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_MISS'] + '\n')
 
     def test_destroy_wrong_class(self):
         """
@@ -169,7 +202,15 @@ class TestConsole(unittest.TestCase):
         """
         all should fail if the wrong class are typed
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("all YoMAMA")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
+
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("YoMAMA.all()")
+        outstr = f.getvalue()
+        self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
 
     def test_all_ok_params(self):
         """
@@ -196,7 +237,16 @@ class TestConsole(unittest.TestCase):
         """
         update should fail if no id are typed
         """
-        pass
+        for cls_elem in TestConsole.cls_list:
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("update {}".format(cls_elem))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_MISS'] + '\n')
+
+            with patch('sys.stdout', new=StringIO()) as f:
+                HBNBCommand().onecmd("{}.update()".format(cls_elem))
+            outstr = f.getvalue()
+            self.assertEqual(outstr, TestConsole.err['ID_MISS'] + '\n')
 
     def test_update_wrong_class(self):
         """
