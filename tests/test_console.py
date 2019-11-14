@@ -110,13 +110,16 @@ class TestConsole(unittest.TestCase):
             HBNBCommand().onecmd("YoMAMA.show()")
         outstr = f.getvalue()
         self.assertEqual(outstr, TestConsole.err['CLS_NOEX'] + '\n')
-        
 
     def test_create_has_help(self):
         """
         Create has documented help
         """
-        pass
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd("help create")
+        outstr = f.getvalue()
+        self.assertIn("create - Creates a new instance of BaseModel",
+                      outstr)
 
     def test_show_missing_class(self):
         """
@@ -238,7 +241,8 @@ class TestConsole(unittest.TestCase):
             self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
             with patch('sys.stdout', new=StringIO()) as f:
-                HBNBCommand().onecmd("{}.destroy({})".format(cls_elem, fake_id))
+                HBNBCommand().onecmd("{}.destroy({})".format(cls_elem, fake_id)
+                                     )
             outstr = f.getvalue()
             self.assertEqual(outstr, TestConsole.err['ID_NOEX'] + '\n')
 
