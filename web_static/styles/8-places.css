@@ -1,0 +1,113 @@
+.places {
+    display: block;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.places h1 {
+    font-size: 30px;
+    width: 100%;
+}
+
+.places article {
+    width: 390px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #ff5a5f;
+    border-radius: 4px;
+}
+
+.place_header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.place_header h2 {
+    margin: auto;
+    text-align: center;
+    font-size: 30px;
+}
+
+.price_pad {
+    position: relative;
+    width: 68px;
+    height: 68px;
+}
+
+.price_by_night {
+    position: relative;
+    color: #ff5a5f;
+    border: 4px solid #ff5a5f;
+    min-width: 60px;
+    height: 60px;
+    font-size: 30px;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.price_by_night p {
+    margin-block-start: 13px;
+    margin-block-end: 15px;
+}
+
+.information {
+    height: 80px;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.max_guest {
+    width: 100px;
+    background: url(../images/icon_group.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: top;
+}
+
+.number_rooms {
+    width: 100px;
+    background: url(../images/icon_bed.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: top;
+}
+
+.number_bathrooms {
+    width: 100px;
+    background: url(../images/icon_bath.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: top;
+}
+
+.max_guest p,
+.number_rooms p,
+.number_bathrooms p {
+    margin-block-start: 55px;
+    margin-block-end: 5px;
+    text-align: center;
+}
+
+.user {
+    width: 100%;
+    text-align: left;
+}
+
+.user p {
+    margin-block-start: 15px;
+    margin-block-end: 5px;
+}
+
+.description p {
+    text-align: left;
+}
+
+html body footer {
+    position: relative;
+}

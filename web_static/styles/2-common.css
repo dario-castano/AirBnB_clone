@@ -1,0 +1,11 @@
+body {
+    padding: 0px; 
+    margin: 0px; 
+    min-height: 100%;
+}
+
+p {
+    vertical-align: middle;
+    margin-top: 21px;
+    margin-bottom: 21px;
+}
